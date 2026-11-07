@@ -69,3 +69,20 @@ token with write access). Do not report a push as successful unless the remote
 confirms the new ref.
 
 <!-- END:arti-project-notes -->
+
+### Vercel deployment notes (Step 01)
+
+- `vercel deploy --temporary` can ship a real, working deployment **without
+  logging in**; it expires one hour after creation and must be claimed from the
+  printed `claimUrl` to persist.
+- **This sandbox cannot open its own Vercel deployments.** The runtime egresses
+  from a Google Cloud IP that Vercel's edge denies for temporary deployments
+  (`403`, `x-vercel-mitigated: deny`). Public Vercel sites load fine, so the
+  block is specific to temp deployments from cloud/datacenter IPs. Verify a
+  deployment from an external vantage point (e.g. `check-host.net`,
+  `api.allorigins.win`) rather than from inside the container.
+- A persistent Production deployment requires a Vercel token
+  (`VERCEL_TOKEN`) or the repo being imported in the Vercel dashboard. Neither
+  is provisioned here; do not claim a production deployment without one.
+- `eslint.config.mjs` ignores `.vercel/**`; `vercel build` writes a
+  `.vercel/output/` tree that ESLint would otherwise lint and fail on.
